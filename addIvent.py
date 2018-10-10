@@ -10,9 +10,7 @@ from oauth2client import file, client, tools
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 
 def main():
-    """Shows basic usage of the Google Calendar API.
-    Prints the start and name of the next 10 events on the user's calendar.
-    """
+	# This code add 4kurs fiit subjects to my Google Calendar 
     store = file.Storage('token.json')
     creds = store.get()
     if not creds or creds.invalid:
@@ -20,15 +18,18 @@ def main():
         creds = tools.run_flow(flow, store)
     service = build('calendar', 'v3', http=creds.authorize(Http()))
 
-
-    # Call the Calendar API
     now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+
+    # Connect to XML file and search 4 kurs FIIT-15
     book = xlrd.open_workbook('C:/1/l01gcal-poewmuh/imi2018.xls')
     sh = book.sheets()[8]
+
     start = ['08:00', '9:50', '11:40', '14:00', '15:40', '17:30']
     end =  ['09:35', '11:25', '13:15', '15:35', '17:20', '19:05']
-    chislo = ['08','10','11']
+
+    #day
     j = 7
+
     for i in range(3,39):
     	npara = (i-3)%6
     	if npara==0:
