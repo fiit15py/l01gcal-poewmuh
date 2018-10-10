@@ -27,18 +27,23 @@ def main():
     sh = book.sheets()[8]
     start = ['08:00', '9:50', '11:40', '14:00', '15:40', '17:30']
     end =  ['09:35', '11:25', '13:15', '15:35', '17:20', '19:05']
-    for i in range(38):
+    chislo = ['08','10','11']
+    j = 7
+    for i in range(3,39):
+    	npara = (i-3)%6
+    	if npara==0:
+    		j += 1
     	if sh.cell(i,8).value != '':
             event = {
                 'summary': sh.cell(i,8).value,
                 'location': sh.cell(i,10).value,
                 'description': sh.cell(i,9).value,
                 'start': {
-                    'dateTime': '2018-10-08T'+ start[(i-3) % 6] +':00+09:00',
+                    'dateTime': '2018-10-{:02d}T{}:00+09:00'.format(j, start[npara]),
                     'timeZone': 'Asia/Yakutsk',
                 },
                 'end': {
-                    'dateTime': '2018-10-08T'+ end[(i-3) % 6] +':00+09:00',
+                    'dateTime': '2018-10-{:02d}T{}:00+09:00'.format(j, end[npara]),
                     'timeZone': 'Asia/Yakutsk',
                 },
                 'recurrence': [
