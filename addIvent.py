@@ -5,7 +5,7 @@ from httplib2 import Http
 from oauth2client import file, client, tools
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
+SCOPES = 'https://www.googleapis.com/auth/calendar'
 
 def main():
     """Shows basic usage of the Google Calendar API.
@@ -18,19 +18,35 @@ def main():
         creds = tools.run_flow(flow, store)
     service = build('calendar', 'v3', http=creds.authorize(Http()))
 
+
     # Call the Calendar API
     now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-    print('Getting the upcoming 10 events')
-    events_result = service.events().list(calendarId='primary', timeMin=now,
-                                        maxResults=10, singleEvents=True,
-                                        orderBy='startTime').execute()
-    events = events_result.get('items', [])
 
-    if not events:
-        print('No upcoming events found.')
-    for event in events:
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        print(start, event['summary'])
+    event = {
+      'summary': 'ДВ. Администрирование OC Windows Леверьев В.С.',
+      'location': '430',
+      'description': 'л / пр',
+      'start': {
+        'dateTime': '2018-10-08T15:45:00+09:00',
+        'timeZone': 'Asia/Yakutsk',
+      },
+      'end': {
+        'dateTime': '2018-10-08T17:20:00+09:00',
+        'timeZone': 'Asia/Yakutsk',
+      },
+      'recurrence': [
+        'RRULE:FREQ=WEEKLY;COUNT=12'
+      ],
+      'reminders': {
+      'useDefault': False,
+      'overrides': [
+      {'method': 'popup', 'minutes': 30},
+    ],
+      }
+    }
+
+    event = service.events().insert(calendarId='primary', body=event).execute()
+    print('Event created: %s' % (event.get('htmlLink')))
 
 if __name__ == '__main__':
     main()
